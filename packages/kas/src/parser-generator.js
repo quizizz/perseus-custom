@@ -16,6 +16,9 @@ var grammar = {
             ["\\s+",                "/* skip whitespace */"],
             ["\\\\space",           "/* skip \\space */"],
             ["\\\\ ",               "/* skip '\\ ' */"],
+            ["\\\\\\\\ ",           "/* skip double escaped space */"],
+            ["\\\\$",               "/* skip trailing backslash */"],
+            ["\\\\(?=[^a-zA-Z\\{\\(\\[\\|])", "/* skip stray backslashes */"],
             ["[0-9]+\\.?",          "return \"INT\""],
             ["([0-9]+)?\\.[0-9]+",  "return \"FLOAT\""],
             ["\\*\\*",              "return \"^\""],
@@ -28,11 +31,15 @@ var grammar = {
             ["-",                   "return \"-\""],
             ["\u2212",              "return \"-\""],    // minus
             ["\\+",                 "return \"+\""],
+            ["\\\\pm",              "return \"PLUSMINUS\""],
+            ["\u00b1",              "return \"PLUSMINUS\""], // plus-minus symbol
             ["\\^",                 "return \"^\""],
             ["\\(",                 "return \"(\""],
             ["\\)",                 "return \")\""],
             ["\\\\left\\(",         "return \"(\""],
             ["\\\\right\\)",        "return \")\""],
+            ["\\\\left\\[",         "return \"[\""],
+            ["\\\\right\\]",        "return \"]\""],
             ["\\[",                 "return \"[\""],
             ["\\]",                 "return \"]\""],
             ["\\{",                 "return \"{\""],
@@ -61,6 +68,15 @@ var grammar = {
             ["abs|\\\\abs",         "return \"abs\""],
             ["ln|\\\\ln",           "return \"ln\""],
             ["log|\\\\log",         "return \"log\""],
+            ["\\\\int",             "return \"int\""],
+            ["\u222b",              "return \"int\""], // integration symbol
+            ["\\\\sum",             "return \"sum\""],
+            ["\u03a3",              "return \"sum\""], // summation symbol
+            ["\\\\lim",             "return \"lim\""],
+            ["lim",                 "return \"lim\""],
+            ["\\\\rightarrow",      "return \"RIGHTARROW\""],
+            ["\u2192",              "return \"RIGHTARROW\""], // → symbol
+            ["\\\\to",              "return \"RIGHTARROW\""],
             ["sin|cos|tan",         "return \"TRIG\""],
             ["csc|sec|cot",         "return \"TRIG\""],
             ["sinh|cosh|tanh",      "return \"TRIG\""],
@@ -92,12 +108,18 @@ var grammar = {
             ["\u0131", 'yytext = "i"; return "CONST"'], // i
             ["\u03C0",              "yytext = \"pi\"; return \"CONST\""],   // pi
             ["\\\\pi",              "yytext = \"pi\"; return \"CONST\""],
+            ["\\\\infty",           "yytext = \"infinity\"; return \"CONST\""],
+            ["\u221e",              "yytext = \"infinity\"; return \"CONST\""], // infinity symbol
+            ["infty",               "yytext = \"infinity\"; return \"CONST\""],
             ["theta",               "return \"VAR\""],
             ["\u03B8",              "yytext = \"theta\"; return \"VAR\""],  // theta
             ["\\\\theta",           "yytext = \"theta\"; return \"VAR\""],
             ["phi",                 "return \"VAR\""],
             ["\u03C6",              "yytext = \"phi\"; return \"VAR\""],  // phi
             ["\\\\phi",             "yytext = \"phi\"; return \"VAR\""],
+            ["\\\\text\\{([^}]*)\\}", "yytext = yytext.slice(6, -1); return \"TEXT\""],  // Handle \text{} commands
+            ["dx",                  "return \"DX\""],  // Handle dx as a differential
+            ["dy",                  "return \"DY\""],  // Handle dy as a differential
             ["[a-zA-Z]",            "return yy.symbolLexer(yytext)"],
             ["$",                   "return \"EOF\""],
             [".",                   "return \"INVALID\""]
@@ -108,10 +130,12 @@ var grammar = {
     },
     operators: [
         ["right", "|"],
-        ["left", "+", "-"],
+        ["left", "RIGHTARROW"],
+        ["left", "+", "-", "PLUSMINUS"],
         ["left", "*", "/"],
         ["left", "UMINUS"],
-        ["right", "^"]
+        ["right", "^"],
+        ["left", "DX", "DY"]
     ],
     start: "equation",
     bnf: {
@@ -126,6 +150,7 @@ var grammar = {
         "additive": [
             ["additive + multiplicative", "$$ = yy.Add.createOrAppend($1, $3);"],
             ["additive - multiplicative", "$$ = yy.Add.createOrAppend($1, yy.Mul.handleNegative($3, \"subtract\"));"],
+            ["additive PLUSMINUS multiplicative", "$$ = new yy.Func('plusminus', yy.Add.createOrAppend($1, $3));"],
             ["multiplicative", "$$ = $1;", {prec: "+"}]
         ],
         "multiplicative": [
@@ -137,6 +162,7 @@ var grammar = {
         ],
         "negative": [
             ["- negative", "$$ = yy.Mul.handleNegative($2);", {prec: "UMINUS"}],
+            ["PLUSMINUS negative", "$$ = new yy.Func('plusminus', $2);", {prec: "UMINUS"}],
             ["triglog", "$$ = $1;"]
         ],
         "trig": [
@@ -170,11 +196,17 @@ var grammar = {
             ["CONST", "$$ = new yy.Const(yytext.toLowerCase());"],
             ["INT", "$$ = yy.Int.create(Number(yytext));"],
             ["FLOAT", "$$ = yy.Float.create(Number(yytext));"],
+            ["DX", "$$ = new yy.Var('dx');"],
+            ["DY", "$$ = new yy.Var('dy');"],
+            ["TEXT", "$$ = new yy.Var(yytext);"],  // Handle text commands
             ["{ additive }", "$$ = $2.completeParse();"],
+            ["{ expression SIGN expression }", "$$ = new yy.Eq($2, $3, $4);"],
+            ["{ additive RIGHTARROW additive }", "$$ = new yy.Func('approaches', $2, $4);"],
             ["( additive )", "$$ = $2.completeParse().addHint('parens');"] // this probably shouldn't be a hint...
         ],
         "function": [
-            ["FUNC", "$$ = yytext;"]
+            ["FUNC", "$$ = yytext;"],
+            ["VAR", "$$ = yytext;"]
         ],
         "invocation": [
             ["sqrt ( additive )", "$$ = yy.Pow.sqrt($3);"],
@@ -183,7 +215,20 @@ var grammar = {
             ["abs ( additive )", "$$ = new yy.Abs($3);"],
             ["| additive |", "$$ = new yy.Abs($2);"],
             ["LEFT| additive RIGHT|", "$$ = new yy.Abs($2);"],
+            ["int ( additive )", "$$ = new yy.Func('int', $3);"],
+            ["int { additive }", "$$ = new yy.Func('int', $3);"],
+            ["int _ subscriptable ^ subscriptable multiplicative", "$$ = new yy.Func('int', $6);"],
+            ["int _ subscriptable ^ subscriptable multiplicative DX", "$$ = new yy.Func('int', $6);"],
+            ["sum ( additive )", "$$ = new yy.Func('sum', $3);"],
+            ["sum { additive }", "$$ = new yy.Func('sum', $3);"],
+            ["sum _ subscriptable ^ subscriptable multiplicative", "$$ = new yy.Func('sum', $6);"],
+            ["lim ( additive )", "$$ = new yy.Func('lim', $3);"],
+            ["lim { additive }", "$$ = new yy.Func('lim', $3);"],
+            ["lim _ subscriptable multiplicative", "$$ = new yy.Func('lim', $4);"],
+            ["DERIVATIVE", "$$ = new yy.Func('d/dx', new yy.Var('x'));"],
+            ["DERIVATIVE ( additive )", "$$ = new yy.Func('d/dx', $3);"],
             ["function ( additive )", "$$ = new yy.Func($1, $3);"]
+
         ],
         "primitive": [
             ["subscriptable", "$$ = $1;"],

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAS Parser Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .examples {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .example {
+            margin: 5px 0;
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+        }
+        .example:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>KAS Parser Demo</h1>
+    <p>Test the KAS (Khan Academy Symbolic) parser with mathematical expressions.</p>
+
+    <div class="input-group">
+        <label for="expression">Expression to parse:</label>
+        <input
+            type="text"
+            id="expression"
+            placeholder="e.g. (x^2+y^2)^.5, 2x+3y=10, sin(pi/2)"
+        />
+        <button onclick="checkParsable()">Check Parsable</button>
+    </div>
+
+    <div id="result" class="result" style="display: none;"></div>
+
+    <div class="examples">
+        <h3>Try these examples:</h3>
+        <div class="example" onclick="setExample('2x+3y=10')">2x+3y=10</div>
+        <div class="example" onclick="setExample('(x^2+y^2)^.5')">(x^2+y^2)^.5</div>
+        <div class="example" onclick="setExample('sin(pi/2)')">sin(pi/2)</div>
+        <div class="example" onclick="setExample('3x^2-5x+2')">3x^2-5x+2</div>
+        <div class="example" onclick="setExample('sqrt(16)')">sqrt(16)</div>
+        <div class="example" onclick="setExample('2*pi*r')">2*pi*r</div>
+
+        <h4>🆕 New Mathematical Features:</h4>
+        <div class="example" onclick="setExample('\\infty')">\\infty</div>
+        <div class="example" onclick="setExample('x = \\infty')">x = \\infty</div>
+        <div class="example" onclick="setExample('a \\pm b')">a \\pm b</div>
+        <div class="example" onclick="setExample('\\int(x)')">\\int(x)</div>
+        <div class="example" onclick="setExample('\\sum(x)')">\\sum(x)</div>
+        <div class="example" onclick="setExample('\\lim(x)')">\\lim(x)</div>
+        <div class="example" onclick="setExample('\\frac{dy}{dx}')">\\frac{dy}{dx}</div>
+        <div class="example" onclick="setExample('x = \\infty + \\int_x^y f\\left(x\\right) dx + \\sum_{x=1}^{x=2} x + \\frac{dy}{dx}\\left(x\\right) + \\lim_{x\\rightarrow 3} x^2 + a_x \\pm x')">Complex Expression - WORKING!</div>
+    </div>
+
+
+    <!-- Import map to resolve underscore -->
+    <script type="importmap">
+    {
+        "imports": {
+            "underscore": "https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-esm.js"
+        }
+    }
+    </script>
+
+    <script type="module">
+        // Import KAS modules - use the proper parse function from nodes.js
+        import {parse} from './src/nodes.js';
+
+        // Wait for page to load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Make KAS available globally
+            window.KAS = {
+                parse: function(input) {
+                    try {
+                        // Use the proper KAS parse function which handles all the setup
+                        const result = parse(input);
+                        return result; // This already returns {parsed: boolean, expr: expr, error: string}
+                    } catch (error) {
+                        return {
+                            parsed: false,
+                            expr: null,
+                            error: error.message
+                        };
+                    }
+                }
+            };
+
+            // Function to check if expression is parsable
+            window.checkParsable = function() {
+                const input = document.getElementById('expression').value.trim();
+                const resultDiv = document.getElementById('result');
+
+                if (!input) {
+                    showResult('Please enter an expression.', false);
+                    return;
+                }
+
+                try {
+                    // Use KAS parser
+                    if (typeof KAS !== 'undefined' && KAS.parse) {
+                        const result = KAS.parse(input);
+
+                        if (result && result.parsed && result.expr) {
+                            showResult(`✅ <strong>Successfully parsed by KAS!</strong><br>Expression: ${input}`, true);
+                        } else {
+                            const errorMsg = result?.error || 'Invalid expression';
+                            showResult(`❌ <strong>KAS parse failed:</strong><br>Error: ${errorMsg}`, false);
+                        }
+                    } else {
+                        showResult(`❌ <strong>KAS parser not loaded</strong>`, false);
+                    }
+                } catch (error) {
+                    showResult(`❌ <strong>Parse error:</strong><br>${error.message}`, false);
+                }
+            };
+
+            // Function to show result
+            function showResult(message, isSuccess) {
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = message;
+                resultDiv.className = `result ${isSuccess ? 'success' : 'error'}`;
+                resultDiv.style.display = 'block';
+            }
+
+            // Function to set example in input
+            window.setExample = function(example) {
+                document.getElementById('expression').value = example;
+            }
+
+            // Handle Enter key in input
+            document.getElementById('expression').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkParsable();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
