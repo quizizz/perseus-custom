@@ -441,7 +441,13 @@ describe("parsing", () => {
     });
 
     test("comma handling", () => {
-        // Commas are treated as separators (like whitespace) and create implicit multiplication
+        // DESIGN NOTE: Commas are treated as whitespace separators, creating implicit multiplication.
+        // This is NOT standard tuple/coordinate notation where (2,2) represents a pair.
+        // Instead, (2,2) is parsed the same as (2 2), which results in 2*2.
+        // This approach was chosen to allow commas in LaTeX expressions without parser errors,
+        // while keeping the parser simple and consistent with existing whitespace handling.
+        // If tuple/coordinate semantics are needed, a different node type would be required.
+        
         // Without parentheses
         expect("2,2").toParseAs("2*2");
         expect("x,y").toParseAs("x*y");
