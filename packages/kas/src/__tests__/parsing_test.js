@@ -448,10 +448,14 @@ describe("parsing", () => {
         expect("\\left(x,y\\right)").toParseAs("x*y");
         expect("(1,2,3)").toParseAs("1*2*3");
         expect("\\left(1,2,3\\right)").toParseAs("1*2*3");
+        // Note: Due to operator precedence, (2+3,4-1) becomes (2+3 4-1) which is 2+(3*4)+(-1)
         expect("(2+3,4-1)").toParseAs("2+3*4+-1");
         expect("\\left(2+3,4-1\\right)").toParseAs("2+3*4+-1");
         expect("(a,b,c)").toParseAs("a*b*c");
         expect("\\left(a,b,c\\right)").toParseAs("a*b*c");
+        // Edge cases
+        expect("(2^3,4)").toParseAs("2^(3)*4");
+        expect("((1,2),3)").toParseAs("1*2*3");
     });
 
     test("structure", () => {
