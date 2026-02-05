@@ -440,6 +440,20 @@ describe("parsing", () => {
         );
     });
 
+    test("comma handling", () => {
+        // Commas are treated as separators (like whitespace) and create implicit multiplication
+        expect("(2,2)").toParseAs("2*2");
+        expect("\\left(2,2\\right)").toParseAs("2*2");
+        expect("(x,y)").toParseAs("x*y");
+        expect("\\left(x,y\\right)").toParseAs("x*y");
+        expect("(1,2,3)").toParseAs("1*2*3");
+        expect("\\left(1,2,3\\right)").toParseAs("1*2*3");
+        expect("(2+3,4-1)").toParseAs("2+3*4+-1");
+        expect("\\left(2+3,4-1\\right)").toParseAs("2+3*4+-1");
+        expect("(a,b,c)").toParseAs("a*b*c");
+        expect("\\left(a,b,c\\right)").toParseAs("a*b*c");
+    });
+
     test("structure", () => {
         expect("").toParseWithStructure("Add()");
         expect("1.").toParseWithStructure("1");
