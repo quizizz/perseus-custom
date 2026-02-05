@@ -442,6 +442,11 @@ describe("parsing", () => {
 
     test("comma handling", () => {
         // Commas are treated as separators (like whitespace) and create implicit multiplication
+        // Without parentheses
+        expect("2,2").toParseAs("2*2");
+        expect("x,y").toParseAs("x*y");
+        expect("1,2,3").toParseAs("1*2*3");
+        // With parentheses
         expect("(2,2)").toParseAs("2*2");
         expect("\\left(2,2\\right)").toParseAs("2*2");
         expect("(x,y)").toParseAs("x*y");
