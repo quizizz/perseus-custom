@@ -17,6 +17,7 @@ var grammar = {
             ["\\\\space",           "/* skip \\space */"],
             ["\\\\ ",               "/* skip '\\ ' */"],
             ["\\\\\\\\ ",           "/* skip double escaped space */"],
+            [",",                   "/* skip comma */"],
             ["\\\\$",               "/* skip trailing backslash */"],
             ["\\\\(?=[^a-zA-Z\\{\\(\\[\\|])", "/* skip stray backslashes */"],
             ["[0-9]+\\.?",          "return \"INT\""],

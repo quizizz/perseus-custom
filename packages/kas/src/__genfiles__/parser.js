@@ -705,17 +705,17 @@ case 2:/* skip '\ ' */
 break;
 case 3:/* skip double escaped space */
 break;
-case 4:/* skip trailing backslash */
+case 4:/* skip comma */
 break;
-case 5:/* skip stray backslashes */
+case 5:/* skip trailing backslash */
 break;
-case 6:return "INT"
+case 6:/* skip stray backslashes */
 break;
-case 7:return "FLOAT"
+case 7:return "INT"
 break;
-case 8:return "^"
+case 8:return "FLOAT"
 break;
-case 9:return "*"
+case 9:return "^"
 break;
 case 10:return "*"
 break;
@@ -723,67 +723,67 @@ case 11:return "*"
 break;
 case 12:return "*"
 break;
-case 13:return "/"
+case 13:return "*"
 break;
 case 14:return "/"
 break;
-case 15:return "-"
+case 15:return "/"
 break;
 case 16:return "-"
 break;
-case 17:return "+"
+case 17:return "-"
 break;
-case 18:return "PLUSMINUS"
+case 18:return "+"
 break;
 case 19:return "PLUSMINUS"
 break;
-case 20:return "^"
+case 20:return "PLUSMINUS"
 break;
-case 21:return "("
+case 21:return "^"
 break;
-case 22:return ")"
+case 22:return "("
 break;
-case 23:return "("
+case 23:return ")"
 break;
-case 24:return ")"
+case 24:return "("
 break;
-case 25:return "["
+case 25:return ")"
 break;
-case 26:return "]"
+case 26:return "["
 break;
-case 27:return "["
+case 27:return "]"
 break;
-case 28:return "]"
+case 28:return "["
 break;
-case 29:return "{"
+case 29:return "]"
 break;
-case 30:return "}"
+case 30:return "{"
 break;
-case 31:return "{"
+case 31:return "}"
 break;
-case 32:return "}"
+case 32:return "{"
 break;
-case 33:return "_"
+case 33:return "}"
 break;
-case 34:return "|"
+case 34:return "_"
 break;
-case 35:return "LEFT|"
+case 35:return "|"
 break;
-case 36:return "RIGHT|"
+case 36:return "LEFT|"
 break;
-case 37:return "!"
+case 37:return "RIGHT|"
 break;
-case 38:return "SIGN"
+case 38:return "!"
 break;
-case 39:yy_.yytext = "<="; return "SIGN"
+case 39:return "SIGN"
 break;
-case 40:yy_.yytext = ">="; return "SIGN"
+case 40:yy_.yytext = "<="; return "SIGN"
 break;
-case 41:yy_.yytext = "<="; return "SIGN"
+case 41:yy_.yytext = ">="; return "SIGN"
 break;
-case 42:yy_.yytext = ">="; return "SIGN"
+case 42:yy_.yytext = "<="; return "SIGN"
 break;
-case 43:yy_.yytext = "<>"; return "SIGN"
+case 43:yy_.yytext = ">="; return "SIGN"
 break;
 case 44:yy_.yytext = "<>"; return "SIGN"
 break;
@@ -791,41 +791,41 @@ case 45:yy_.yytext = "<>"; return "SIGN"
 break;
 case 46:yy_.yytext = "<>"; return "SIGN"
 break;
-case 47:yy_.yytext = "<="; return "SIGN"
+case 47:yy_.yytext = "<>"; return "SIGN"
 break;
-case 48:yy_.yytext = ">="; return "SIGN"
+case 48:yy_.yytext = "<="; return "SIGN"
 break;
-case 49:return "FRAC"
+case 49:yy_.yytext = ">="; return "SIGN"
 break;
 case 50:return "FRAC"
 break;
-case 51:return "sqrt"
+case 51:return "FRAC"
 break;
-case 52:return "abs"
+case 52:return "sqrt"
 break;
-case 53:return "ln"
+case 53:return "abs"
 break;
-case 54:return "log"
+case 54:return "ln"
 break;
-case 55:return "int"
+case 55:return "log"
 break;
 case 56:return "int"
 break;
-case 57:return "sum"
+case 57:return "int"
 break;
 case 58:return "sum"
 break;
-case 59:return "lim"
+case 59:return "sum"
 break;
 case 60:return "lim"
 break;
-case 61:return "RIGHTARROW"
+case 61:return "lim"
 break;
 case 62:return "RIGHTARROW"
 break;
 case 63:return "RIGHTARROW"
 break;
-case 64:return "TRIG"
+case 64:return "RIGHTARROW"
 break;
 case 65:return "TRIG"
 break;
@@ -833,96 +833,98 @@ case 66:return "TRIG"
 break;
 case 67:return "TRIG"
 break;
-case 68:yy_.yytext = "sin"; return "TRIG"
+case 68:return "TRIG"
 break;
-case 69:yy_.yytext = "cos"; return "TRIG"
+case 69:yy_.yytext = "sin"; return "TRIG"
 break;
-case 70:yy_.yytext = "tan"; return "TRIG"
+case 70:yy_.yytext = "cos"; return "TRIG"
 break;
-case 71:yy_.yytext = "csc"; return "TRIG"
+case 71:yy_.yytext = "tan"; return "TRIG"
 break;
-case 72:yy_.yytext = "sec"; return "TRIG"
+case 72:yy_.yytext = "csc"; return "TRIG"
 break;
-case 73:yy_.yytext = "cot"; return "TRIG"
+case 73:yy_.yytext = "sec"; return "TRIG"
 break;
-case 74:yy_.yytext = "arcsin"; return "TRIG"
+case 74:yy_.yytext = "cot"; return "TRIG"
 break;
-case 75:yy_.yytext = "arccos"; return "TRIG"
+case 75:yy_.yytext = "arcsin"; return "TRIG"
 break;
-case 76:yy_.yytext = "arctan"; return "TRIG"
+case 76:yy_.yytext = "arccos"; return "TRIG"
 break;
-case 77:yy_.yytext = "arccsc"; return "TRIG"
+case 77:yy_.yytext = "arctan"; return "TRIG"
 break;
-case 78:yy_.yytext = "arcsec"; return "TRIG"
+case 78:yy_.yytext = "arccsc"; return "TRIG"
 break;
-case 79:yy_.yytext = "arccot"; return "TRIG"
+case 79:yy_.yytext = "arcsec"; return "TRIG"
 break;
-case 80:return "TRIGINV"
+case 80:yy_.yytext = "arccot"; return "TRIG"
 break;
 case 81:return "TRIGINV"
 break;
-case 82:yy_.yytext = "sinh"; return "TRIG"
+case 82:return "TRIGINV"
 break;
-case 83:yy_.yytext = "cosh"; return "TRIG"
+case 83:yy_.yytext = "sinh"; return "TRIG"
 break;
-case 84:yy_.yytext = "tanh"; return "TRIG"
+case 84:yy_.yytext = "cosh"; return "TRIG"
 break;
-case 85:yy_.yytext = "csch"; return "TRIG"
+case 85:yy_.yytext = "tanh"; return "TRIG"
 break;
-case 86:yy_.yytext = "sech"; return "TRIG"
+case 86:yy_.yytext = "csch"; return "TRIG"
 break;
-case 87:yy_.yytext = "tanh"; return "TRIG"
+case 87:yy_.yytext = "sech"; return "TRIG"
 break;
-case 88:return "CONST"
+case 88:yy_.yytext = "tanh"; return "TRIG"
 break;
 case 89:return "CONST"
 break;
-case 90:yy_.yytext = "E"; return "CONST"
+case 90:return "CONST"
 break;
 case 91:yy_.yytext = "E"; return "CONST"
 break;
-case 92:yy_.yytext = "i"; return "CONST"
+case 92:yy_.yytext = "E"; return "CONST"
 break;
-case 93:yy_.yytext = "pi"; return "CONST"
+case 93:yy_.yytext = "i"; return "CONST"
 break;
 case 94:yy_.yytext = "pi"; return "CONST"
 break;
-case 95:yy_.yytext = "infinity"; return "CONST"
+case 95:yy_.yytext = "pi"; return "CONST"
 break;
 case 96:yy_.yytext = "infinity"; return "CONST"
 break;
 case 97:yy_.yytext = "infinity"; return "CONST"
 break;
-case 98:return "VAR"
+case 98:yy_.yytext = "infinity"; return "CONST"
 break;
-case 99:yy_.yytext = "theta"; return "VAR"
+case 99:return "VAR"
 break;
 case 100:yy_.yytext = "theta"; return "VAR"
 break;
-case 101:return "VAR"
+case 101:yy_.yytext = "theta"; return "VAR"
 break;
-case 102:yy_.yytext = "phi"; return "VAR"
+case 102:return "VAR"
 break;
 case 103:yy_.yytext = "phi"; return "VAR"
 break;
-case 104:yy_.yytext = yy_.yytext.slice(6, -1); return "TEXT"
+case 104:yy_.yytext = "phi"; return "VAR"
 break;
-case 105:return "DX"
+case 105:yy_.yytext = yy_.yytext.slice(6, -1); return "TEXT"
 break;
-case 106:return "DY"
+case 106:return "DX"
 break;
-case 107:return yy.symbolLexer(yy_.yytext)
+case 107:return "DY"
 break;
-case 108:return "EOF"
+case 108:return yy.symbolLexer(yy_.yytext)
 break;
-case 109:return "INVALID"
+case 109:return "EOF"
 break;
-case 110:console.log(yy_.yytext);
+case 110:return "INVALID"
+break;
+case 111:console.log(yy_.yytext);
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:\\space)/,/^(?:\\ )/,/^(?:\\\\ )/,/^(?:\\$)/,/^(?:\\(?=[^a-zA-Z\{\(\[\|]))/,/^(?:[0-9]+\.?)/,/^(?:([0-9]+)?\.[0-9]+)/,/^(?:\*\*)/,/^(?:\*)/,/^(?:\\cdot|·)/,/^(?:\\times|×)/,/^(?:\\ast)/,/^(?:\/)/,/^(?:\\div|÷)/,/^(?:-)/,/^(?:−)/,/^(?:\+)/,/^(?:\\pm)/,/^(?:±)/,/^(?:\^)/,/^(?:\()/,/^(?:\))/,/^(?:\\left\()/,/^(?:\\right\))/,/^(?:\\left\[)/,/^(?:\\right\])/,/^(?:\[)/,/^(?:\])/,/^(?:\{)/,/^(?:\})/,/^(?:\\left\{)/,/^(?:\\right\})/,/^(?:_)/,/^(?:\|)/,/^(?:\\left\|)/,/^(?:\\right\|)/,/^(?:\!)/,/^(?:<=|>=|<>|<|>|=)/,/^(?:\\le)/,/^(?:\\ge)/,/^(?:\\leq)/,/^(?:\\geq)/,/^(?:=\/=)/,/^(?:\\ne)/,/^(?:\\neq)/,/^(?:≠)/,/^(?:≤)/,/^(?:≥)/,/^(?:\\frac)/,/^(?:\\dfrac)/,/^(?:sqrt|\\sqrt)/,/^(?:abs|\\abs)/,/^(?:ln|\\ln)/,/^(?:log|\\log)/,/^(?:\\int)/,/^(?:∫)/,/^(?:\\sum)/,/^(?:Σ)/,/^(?:\\lim)/,/^(?:lim)/,/^(?:\\rightarrow)/,/^(?:→)/,/^(?:\\to)/,/^(?:sin|cos|tan)/,/^(?:csc|sec|cot)/,/^(?:sinh|cosh|tanh)/,/^(?:csch|sech|coth)/,/^(?:\\sin)/,/^(?:\\cos)/,/^(?:\\tan)/,/^(?:\\csc)/,/^(?:\\sec)/,/^(?:\\cot)/,/^(?:\\arcsin)/,/^(?:\\arccos)/,/^(?:\\arctan)/,/^(?:\\arccsc)/,/^(?:\\arcsec)/,/^(?:\\arccot)/,/^(?:arcsin|arccos|arctan)/,/^(?:arccsc|arcsec|arccot)/,/^(?:\\sinh)/,/^(?:\\cosh)/,/^(?:\\tanh)/,/^(?:\\csch)/,/^(?:\\sech)/,/^(?:\\coth)/,/^(?:pi)/,/^(?:e)/,/^(?:ℇ)/,/^(?:\\e)/,/^(?:ı)/,/^(?:π)/,/^(?:\\pi)/,/^(?:\\infty)/,/^(?:∞)/,/^(?:infty)/,/^(?:theta)/,/^(?:θ)/,/^(?:\\theta)/,/^(?:phi)/,/^(?:φ)/,/^(?:\\phi)/,/^(?:\\text\{([^}]*)\})/,/^(?:dx)/,/^(?:dy)/,/^(?:[a-zA-Z])/,/^(?:$)/,/^(?:.)/,/^(?:.)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110],"inclusive":true}}
+rules: [/^(?:\s+)/,/^(?:\\space)/,/^(?:\\ )/,/^(?:\\\\ )/,/^(?:,)/,/^(?:\\$)/,/^(?:\\(?=[^a-zA-Z\{\(\[\|]))/,/^(?:[0-9]+\.?)/,/^(?:([0-9]+)?\.[0-9]+)/,/^(?:\*\*)/,/^(?:\*)/,/^(?:\\cdot|·)/,/^(?:\\times|×)/,/^(?:\\ast)/,/^(?:\/)/,/^(?:\\div|÷)/,/^(?:-)/,/^(?:−)/,/^(?:\+)/,/^(?:\\pm)/,/^(?:±)/,/^(?:\^)/,/^(?:\()/,/^(?:\))/,/^(?:\\left\()/,/^(?:\\right\))/,/^(?:\\left\[)/,/^(?:\\right\])/,/^(?:\[)/,/^(?:\])/,/^(?:\{)/,/^(?:\})/,/^(?:\\left\{)/,/^(?:\\right\})/,/^(?:_)/,/^(?:\|)/,/^(?:\\left\|)/,/^(?:\\right\|)/,/^(?:\!)/,/^(?:<=|>=|<>|<|>|=)/,/^(?:\\le)/,/^(?:\\ge)/,/^(?:\\leq)/,/^(?:\\geq)/,/^(?:=\/=)/,/^(?:\\ne)/,/^(?:\\neq)/,/^(?:≠)/,/^(?:≤)/,/^(?:≥)/,/^(?:\\frac)/,/^(?:\\dfrac)/,/^(?:sqrt|\\sqrt)/,/^(?:abs|\\abs)/,/^(?:ln|\\ln)/,/^(?:log|\\log)/,/^(?:\\int)/,/^(?:∫)/,/^(?:\\sum)/,/^(?:Σ)/,/^(?:\\lim)/,/^(?:lim)/,/^(?:\\rightarrow)/,/^(?:→)/,/^(?:\\to)/,/^(?:sin|cos|tan)/,/^(?:csc|sec|cot)/,/^(?:sinh|cosh|tanh)/,/^(?:csch|sech|coth)/,/^(?:\\sin)/,/^(?:\\cos)/,/^(?:\\tan)/,/^(?:\\csc)/,/^(?:\\sec)/,/^(?:\\cot)/,/^(?:\\arcsin)/,/^(?:\\arccos)/,/^(?:\\arctan)/,/^(?:\\arccsc)/,/^(?:\\arcsec)/,/^(?:\\arccot)/,/^(?:arcsin|arccos|arctan)/,/^(?:arccsc|arcsec|arccot)/,/^(?:\\sinh)/,/^(?:\\cosh)/,/^(?:\\tanh)/,/^(?:\\csch)/,/^(?:\\sech)/,/^(?:\\coth)/,/^(?:pi)/,/^(?:e)/,/^(?:ℇ)/,/^(?:\\e)/,/^(?:ı)/,/^(?:π)/,/^(?:\\pi)/,/^(?:\\infty)/,/^(?:∞)/,/^(?:infty)/,/^(?:theta)/,/^(?:θ)/,/^(?:\\theta)/,/^(?:phi)/,/^(?:φ)/,/^(?:\\phi)/,/^(?:\\text\{([^}]*)\})/,/^(?:dx)/,/^(?:dy)/,/^(?:[a-zA-Z])/,/^(?:$)/,/^(?:.)/,/^(?:.)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111],"inclusive":true}}
 });
 return lexer;
 })();
