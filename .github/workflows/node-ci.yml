@@ -34,6 +34,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Enable Corepack
+      run: corepack enable
+
     - name: Get All Changed Files
       uses: Khan/actions@get-changed-files-v1
       id: changed
@@ -97,6 +100,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Enable Corepack
+      run: corepack enable
+
     - name: Run test with coverage
       run: yarn cypress:ci
 
@@ -126,6 +132,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
+    - name: Enable Corepack
+      run: corepack enable
+
     - name: Jest with coverage
       run: yarn coverage
 
@@ -152,6 +161,10 @@ jobs:
       uses: Khan/actions@shared-node-cache-v0
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Enable Corepack
+      run: corepack enable
+
     # Make sure our packages aren't growing unexpectedly
     # This must come last as it builds the old code last and so leaves the
     # wrong code in place for the next job.
@@ -181,6 +194,9 @@ jobs:
       uses: Khan/actions@shared-node-cache-v0
       with:
         node-version: ${{ matrix.node-version }}
+
+    - name: Enable Corepack
+      run: corepack enable
 
     - name: Extract strings
       run: yarn extract-strings
