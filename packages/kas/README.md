@@ -89,6 +89,30 @@ First, make any changes in `src/parser-generator.js`
     npm install
     npm run build:parser
 
+How to run tests
+----------------
+From the monorepo root, run:
+
+    yarn test packages/kas
+
+If the monorepo test infrastructure has compatibility issues (e.g., ESM module errors with enzyme/cheerio), you can run kas tests directly with a minimal jest config:
+
+```bash
+npx jest packages/kas/src/__tests__/parsing_test.js --no-coverage \
+  --config='{"testEnvironment":"node","transform":{"^.+\\.jsx?$":"<rootDir>/config/test/test.transform.js"},"moduleNameMapper":{"^@khanacademy/kas$":"<rootDir>/packages/kas/src/index.js"}}'
+```
+
+Or test parsing manually with node:
+
+```bash
+cd packages/kas && yarn build
+node -e "
+const KAS = require('./dist/index.js');
+console.log(KAS.parse('(2,3)'));
+// { parsed: true, expr: Coord { x: Int, y: Int } }
+"
+```
+
 License
 -------
 [MIT License](http://opensource.org/licenses/MIT)

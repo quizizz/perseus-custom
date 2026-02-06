@@ -484,4 +484,28 @@ describe("parsing", () => {
         expect("-x*3").toParseWithStructure("Mul(Var(x),-3)");
         expect("sin -x*3").toParseWithStructure("Trig(sin,Mul(Var(x),-3))");
     });
+
+    test("coordinates", () => {
+        // basic coordinate formats
+        expect("(2,3)").toParseAs("(2,3)");
+        expect("\\left(2,3\\right)").toParseAs("(2,3)");
+        expect("2,3").toParseAs("(2,3)");
+
+        // coordinates with expressions
+        expect("(1+1,2+1)").toParseAs("(1+1,2+1)");
+        expect("(x,y)").toParseAs("(x,y)");
+        expect("(a+b,c*d)").toParseAs("(a+b,c*d)");
+
+        // coordinates with variables and operations
+        expect("(x^2,y^2)").toParseAs("(x^(2),y^(2))");
+        expect("(-1,2)").toParseAs("(-1,2)");
+        expect("(2,-3)").toParseAs("(2,-3)");
+
+        // structure tests
+        expect("(2,3)").toParseWithStructure("Coord(2,3)");
+        expect("\\left(2,3\\right)").toParseWithStructure("Coord(2,3)");
+        expect("2,3").toParseWithStructure("Coord(2,3)");
+        expect("(x,y)").toParseWithStructure("Coord(Var(x),Var(y))");
+        expect("(1+2,3)").toParseWithStructure("Coord(Add(1,2),3)");
+    });
 });
