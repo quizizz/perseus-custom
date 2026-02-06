@@ -47,6 +47,7 @@ var grammar = {
             ["\\\\left\\{",         "return \"{\""],
             ["\\\\right\\}",        "return \"}\""],
             ["_",                   "return \"_\""],
+            [",",                   "return \",\""],
             ["\\|",                 "return \"|\""],
             ["\\\\left\\|",         "return \"LEFT|\""],
             ["\\\\right\\|",        "return \"RIGHT|\""],
@@ -145,6 +146,7 @@ var grammar = {
             ["EOF", "return new yy.Add([]);"]
         ],
         "expression": [
+            ["additive , additive", "$$ = new yy.Coord($1, $3);"],
             ["additive", "$$ = $1;"]
         ],
         "additive": [
@@ -202,7 +204,8 @@ var grammar = {
             ["{ additive }", "$$ = $2.completeParse();"],
             ["{ expression SIGN expression }", "$$ = new yy.Eq($2, $3, $4);"],
             ["{ additive RIGHTARROW additive }", "$$ = new yy.Func('approaches', $2, $4);"],
-            ["( additive )", "$$ = $2.completeParse().addHint('parens');"] // this probably shouldn't be a hint...
+            ["( additive )", "$$ = $2.completeParse().addHint('parens');"],
+            ["( additive , additive )", "$$ = new yy.Coord($2, $4);"] // this probably shouldn't be a hint...
         ],
         "function": [
             ["FUNC", "$$ = yytext;"],

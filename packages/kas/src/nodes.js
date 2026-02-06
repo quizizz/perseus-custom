@@ -2272,6 +2272,50 @@ _.extend(Abs.prototype, {
 });
 
 
+/* coordinate pair */
+export function Coord(x, y) {
+    this.x = x;
+    this.y = y;
+}
+Coord.prototype = new Expr();
+
+_.extend(Coord.prototype, {
+    func: Coord,
+    args: function() { return [this.x, this.y]; },
+
+    print: function() {
+        return "(" + this.x.print() + "," + this.y.print() + ")";
+    },
+
+    tex: function() {
+        return "\\left(" + this.x.tex() + "," + this.y.tex() + "\\right)";
+    },
+
+    repr: function() {
+        return "Coord(" + this.x.repr() + "," + this.y.repr() + ")";
+    },
+
+    normalize: function() {
+        return new Coord(this.x.normalize(), this.y.normalize());
+    },
+
+    getVars: function(excludeFunc) {
+        return _.union(
+            this.x.getVars(excludeFunc),
+            this.y.getVars(excludeFunc)
+        );
+    },
+
+    strip: function() {
+        return new Coord(this.x.strip(), this.y.strip());
+    },
+
+    collect: function(options) {
+        return new Coord(this.x.collect(options), this.y.collect(options));
+    }
+});
+
+
 /* equation */
 export function Eq(left, type, right) {
     this.left = left;
@@ -3079,6 +3123,7 @@ parser.yy = {
     Trig: Trig,
     Eq: Eq,
     Abs: Abs,
+    Coord: Coord,
     Func: Func,
     Const: Const,
     Var: Var,
